@@ -24,6 +24,6 @@ class Day01 : AdventOfCode2019(1), Days<IntArray> {
 }
 
 fun main() {
-    println("The result is for part 1 is ${Day01().getFirstResult()}")
-    println("The result is for part 2 is ${Day01().getSecondResult()}")
+    println("The result for part 1 is ${Day01().getFirstResult()}")
+    println("The result for part 2 is ${Day01().getSecondResult()}")
 }
