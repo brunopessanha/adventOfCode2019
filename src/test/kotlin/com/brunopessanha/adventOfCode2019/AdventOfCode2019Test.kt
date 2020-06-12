@@ -13,6 +13,6 @@ internal class AdventOfCode2019Test {
         val day01 = Day01()
         val result = day01.read()
         assertThat { result.size == 100 }
-        assertThat { day01.getResult() ==  3279287}
+        assertThat { day01.getFirstResult() ==  3279287}
     }
 }
