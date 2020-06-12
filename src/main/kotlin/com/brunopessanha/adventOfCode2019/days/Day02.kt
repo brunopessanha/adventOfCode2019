@@ -22,50 +22,74 @@ private enum class OpCodes(val value: Int) {
     abstract fun calculate(first : Int, second : Int) : Int
 }
 
-class Day02 : AdventOfCode2019(2), Days<IntArray> {
+class Day02() : AdventOfCode2019(2), Days<IntArray> {
 
-    private var integers: IntArray = intArrayOf()
-    private var sp = 0
-    private val spStep = 4
-
+    private var instructions: IntArray = read()
+    private var instructionPointer = 0
+    private val instructionStep = 4
 
     override fun read() = getInputAsString().split(',').map { it.toInt() }.toIntArray()
 
-    private fun prepareInput() {
-        integers = read()
-        integers[1] = 12
-        integers[2] = 2
+    private fun prepareInput(noun: Int, verb: Int) {
+        instructionPointer = 0
+        instructions = read()
+        instructions[1] = noun
+        instructions[2] = verb
     }
 
     private fun getArg1(): Int {
-        return integers[integers[sp + 1]]
+        return instructions[instructions[instructionPointer + 1]]
     }
 
     private fun getArg2(): Int {
-        return integers[integers[sp + 2]]
+        return instructions[instructions[instructionPointer + 2]]
     }
 
     private fun setOutput(value: Int) {
-        integers[integers[sp + 3]] = value
+        instructions[instructions[instructionPointer + 3]] = value
     }
 
-    fun computePartOne() : Int {
-        prepareInput()
-        while (sp < integers.size && integers[sp] != OpCodes.END.value) {
-            when (integers[sp]) {
+    private fun getOutput() : Int {
+        return instructions[0]
+    }
+
+    private fun computationNotFinished() = instructionPointer < instructions.size
+            && instructions[instructionPointer] != OpCodes.END.value
+
+    private fun fetchNextInstruction() {
+        instructionPointer += instructionStep
+    }
+
+    fun compute(noun: Int,  verb: Int) : Int {
+        prepareInput(noun, verb)
+        while (computationNotFinished()) {
+            when (instructions[instructionPointer]) {
                 OpCodes.SUM.value -> setOutput(OpCodes.SUM.calculate(getArg1(), getArg2()))
                 OpCodes.MULTIPLICATION.value -> setOutput(OpCodes.MULTIPLICATION.calculate(getArg1(), getArg2()))
-                OpCodes.END.value -> return integers[0]
+                OpCodes.END.value -> return getOutput()
             }
-            sp += spStep
+            fetchNextInstruction()
         }
-
-        return integers[0]
+        return getOutput()
     }
-
 
 }
 
 fun main() {
-    println("The integer at position 0 is ${Day02().computePartOne()}")
+
+    val day02 = Day02()
+    var currentResult = day02.compute(12, 2)
+
+    println("Part 1 - The integer at position 0 is $currentResult")
+
+    val expectedResult = 19690720
+    for(noun in 0..100) {
+        for (verb in 0..100) {
+            currentResult = day02.compute(noun, verb)
+            if (currentResult == expectedResult) {
+                println("Part 2 - 100 * noun + verb = ${(100 * noun) + verb}")
+                return
+            }
+        }
+    }
 }
