@@ -6,9 +6,24 @@ class Day01 : AdventOfCode2019(1), Days<IntArray> {
 
     override fun read() = getInputAsString().split("\n").map { it.toInt() }.toIntArray()
 
-    fun getResult () = this.read().sumBy { kotlin.math.floor(it.toDouble() / 3).toInt() - 2 }
+    private fun calculateFuel(mass: Int) = kotlin.math.floor(mass.toDouble() / 3).toInt() - 2
+
+    fun getFirstResult () = this.read().sumBy { calculateFuel(it) }
+
+    fun getSecondResult (): Int {
+        var total = 0
+        this.read().forEach {
+            var value = calculateFuel(it)
+            while (value > 0) {
+                total += value
+                value = calculateFuel(value)
+            }
+        }
+        return total
+    }
 }
 
 fun main() {
-    println("The result is ${Day01().getResult()}")
+    println("The result is for part 1 is ${Day01().getFirstResult()}")
+    println("The result is for part 2 is ${Day01().getSecondResult()}")
 }
